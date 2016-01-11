@@ -16,12 +16,37 @@ use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
 
 class RedisHttpStore implements StoreInterface
 {
+    /**
+     * @var Client
+     */
     protected $client;
+    
+    /**
+     * @var string
+     */
     protected $digest_key_prefix;
+    
+    /**
+     * @var string
+     */
     protected $metadata_key_prefix;
+    
+    /**
+     * @var string
+     */
     protected $lock_key;
+    
+    /**
+     * @var string
+     */
     protected $keyCache;
 
+    /**
+     * @param string $connection_params
+     * @param string $digest_key_prefix
+     * @param string $lock_key
+     * @param string $metadata_key_prefix
+     */
     public function __construct($connection_params, $digest_key_prefix, $lock_key, $metadata_key_prefix)
     {
         $this->client = new Client($connection_params);
@@ -305,6 +330,10 @@ class RedisHttpStore implements StoreInterface
         return $this->digest_key_prefix . sha1($response->getContent());
     }
 
+    /**
+     * @param string $key
+     * @param string $data
+     */
     private function save($key, $data)
     {
         $this->client->createConnection();
@@ -393,7 +422,13 @@ class RedisHttpStore implements StoreInterface
         return $headers;
     }
 
-    private function recreateResponse($headers, $body)
+    /**
+     * @param array $headers
+     * @param mixed $body
+     * 
+     * @return Response
+     */
+    private function recreateResponse(array $headers, $body)
     {
         $status = $headers['X-Status'][0];
         unset($headers['X-Status']);

@@ -12,15 +12,40 @@ use Redis;
 
 class Client
 {
+    /**
+     * @var Redis
+     */
     protected $redis;
 
+    /**
+     * @var string
+     */
     protected $host;
+    
+    /**
+     * @var int
+     */
     protected $port;
+    
+    /**
+     * @var string
+     */
     protected $password;
+    
+    /**
+     * @var int
+     */
     protected $database;
+    
+    /**
+     * @var array
+     */
     protected $options;
 
 
+    /**
+     * @param array $params
+     */
     public function __construct(array $params)
     {
         $this->redis = new Redis();
@@ -43,11 +68,17 @@ class Client
         }
     }
 
+    /**
+     * @return void
+     */
     public function __destroy()
     {
         $this->redis->close();
     }
 
+    /**
+     * @return bool
+     */
     public function createConnection()
     {
         $success = $this->redis->connect($this->host, $this->port);
@@ -69,6 +100,12 @@ class Client
         return $success;
     }
 
+    /**
+     * @param string $name
+     * @param array  $arguments
+     * 
+     * @return boolean
+     */
     public function __call($name, array $arguments)
     {
         switch (strtolower($name)) {
